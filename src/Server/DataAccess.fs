@@ -33,7 +33,8 @@ module GeoLocation =
 
         let location = {
             LatLong = latLong
-            Town = postcode.Result.AdminDistrict
+            // Town = postcode.Result.AdminDistrict
+            Town = "A Town"
             Region = postcode.Result.Nuts
         }
 
@@ -90,7 +91,10 @@ module Weather =
         try
             use client = new HttpClient()
 
-            let uri = Uri($"https://api.open-meteo.com/v1/forecast?latitude=%f{location.Latitude}&longitude=%f{location.Longitude}&current_weather=true")
+            let uri =
+                Uri(
+                    $"https://api.open-meteo.com/v1/forecast?latitude=%f{location.Latitude}&longitude=%f{location.Longitude}&current_weather=true"
+                )
 
             let! response = client.GetAsync(uri) |> Async.AwaitTask
 
