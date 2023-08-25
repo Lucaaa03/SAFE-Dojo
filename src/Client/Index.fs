@@ -83,7 +83,11 @@ let update msg model =
             Postcode = p
             (* Task 2.2 Validation. Use the Validation.isValidPostcode function to implement client-side form validation.
                Note that the validation is the same shared code that runs on the server! *)
-            ValidationError = None
+            ValidationError =
+                if (Validation.isValidPostcode p) then
+                    None
+                else
+                    Some "Invalid Postcode"
         },
         Cmd.none
 
