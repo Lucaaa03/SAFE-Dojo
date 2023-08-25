@@ -194,7 +194,7 @@ module ViewParts =
                                    and display it here instead of an empty string.
                                    Hint: Use sprintf with "%.2f" to round the temperature to 2 decimal points
                                    (look at the locationWidget for an example) *)
-                                Html.td ""
+                                Html.td (sprintf "%.1f °C" weatherReport.Temperature)
                             ]
                         ]
                     ]
@@ -213,7 +213,7 @@ module ViewParts =
                         Html.tr [ Html.th "Town"; Html.td model.Location.Location.Town ]
                         Html.tr [
                             Html.th "Distance to London"
-                            Html.td (sprintf "%.2fKM" model.Location.DistanceToLondon)
+                            Html.td (sprintf "%.2f km" model.Location.DistanceToLondon)
                         ]
                     ]
                 ]
@@ -325,6 +325,14 @@ let view (model: Model) dispatch =
                                     if (model.ServerState = Loading) then
                                         button.isLoading
                                     prop.text "Fetch"
+                                ]
+                            ]
+                            Bulma.control.div [
+                                Bulma.button.a [
+                                    color.isDanger
+                                    if (model.ServerState = Loading) then
+                                        button.isLoading
+                                    prop.text "Clear"
                                 ]
                             ]
                         ]
