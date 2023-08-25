@@ -15,6 +15,7 @@ open Shared
 type Report = {
     Location: LocationResponse
     Crimes: CrimeResponse array
+    Weather: WeatherResponse
 }
 
 type ServerState =
@@ -55,11 +56,16 @@ let dojoApi =
 let getResponse postcode = async {
     let! location = dojoApi.GetDistance postcode
     let! crimes = dojoApi.GetCrimes postcode
+    let! weather = dojoApi.GetWeather postcode
     (* Task 4.4 WEATHER: Fetch the weather from the API endpoint you created.
        Then, save its value into the Report below. You'll need to add a new
        field to the Report type first, though! *)
 
-    return { Location = location; Crimes = crimes }
+    return {
+        Location = location
+        Crimes = crimes
+        Weather = weather
+    }
 }
 
 /// The update function knows how to update the model given a message.
@@ -332,26 +338,15 @@ let view (model: Model) dispatch =
             | Some report, _ ->
                 Bulma.section [
                     Bulma.columns [
-                        Bulma.column [
-                            prop.children [
-                                Bulma.columns [
-                                    Bulma.column [
-                                        column.isFull
-                                        prop.children [ locationWidget report; mapWidget model.Report.Value.Location ]
-                                    ]
-                                    Bulma.column [
-                                    (* Task 4.5 WEATHER: Generate the view code for the weather tile
-                                           using the weatherWidget function, supplying the weather data
-                                           from the report value, and include it here as part of the list *)
-                                    ]
-                                ]
-                            //if model.Report.IsSome then
-                            (* Task 3.1 MAP: Call the mapWidget function here, which creates a
-                                   widget to display a map using the React ReCharts component. The function
-                                   takes in a LocationResponse value as input and returns a ReactElement. *)
+                        column.isFull
+                        prop.children [
+                            Bulma.column [
+                                column.isOneFifth
+                                prop.children [ locationWidget report; weatherWidget report.Weather ]
                             ]
+                            Bulma.column [ column.isTwoFifths; prop.children [ mapWidget model.Report.Value.Location ] ]
+                            Bulma.column [ column.isTwoFifths; prop.children [ crimeWidget report.Crimes ] ]
                         ]
-                        Bulma.column [ column.is7; prop.children [ crimeWidget report.Crimes ] ]
                     ]
                 ]
 
